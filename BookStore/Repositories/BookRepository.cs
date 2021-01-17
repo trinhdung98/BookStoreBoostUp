@@ -15,14 +15,6 @@ namespace BookStore.Repositories
             context = new BookStoreDbContext();
         }
 
-        public IEnumerable<Book> Books
-        {
-            get
-            {
-                return context.Books;
-            }
-        }
-
         public void CreateBook(Book book)
         {
             Book oldBook = context.Books.Where(x => x.ID == book.ID).FirstOrDefault();
@@ -55,6 +47,12 @@ namespace BookStore.Repositories
         {
             Book oldBook = context.Books.Where(x => x.ID == bookId).SingleOrDefault();
             return oldBook; 
+        }
+
+        public IQueryable<Book> GetBooks()
+        {
+            IQueryable<Book> books = context.Set<Book>();
+            return books;
         }
 
         public Book UpdateBook(Book book)

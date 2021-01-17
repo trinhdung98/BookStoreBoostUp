@@ -1,4 +1,5 @@
 ﻿using BookStore.Entities;
+using BookStore.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace BookStore.Services
 {
     public interface IBookService
     {
-        IEnumerable<Book> GetAllBooks();
-        Book GetBook(int bookId);
-        void CreateBook(Book book);
-        Book DeleteBook(int bookId);
-        Book UpdateBook(Book book);
+        List<BookViewModel> GetAllBooks();
+        BookViewModel GetBook(int bookId);
+        void CreateBook(BookViewModel bookVm);
+        BookViewModel DeleteBook(int bookId);
+        BookViewModel UpdateBook(BookViewModel bookVm);
     }
 }

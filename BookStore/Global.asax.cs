@@ -18,6 +18,7 @@ namespace BookStore
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             DependencyResolver.SetResolver(new NinjectDependencyResolver());
+            log4net.Config.XmlConfigurator.Configure();
         }
     }
 }

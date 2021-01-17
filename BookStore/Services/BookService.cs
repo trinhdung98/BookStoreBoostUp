@@ -2,42 +2,51 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using BookStore.Entities;
+using BookStore.Models;
 using BookStore.Repositories;
+using Ninject;
 
 namespace BookStore.Services
 {
     public class BookService : IBookService
     {
+        [Inject]
+        public IMapper Mapper { get; set; }
+
         private IBookRepository _bookRepository;
         public BookService(IBookRepository bookRepository)
         {
             _bookRepository = bookRepository;
         }
 
-        public void CreateBook(Book book)
+        public void CreateBook(BookViewModel bookVm)
         {
-            _bookRepository.CreateBook(book);
+            _bookRepository.CreateBook(Mapper.Map<BookViewModel, Book>(bookVm));
         }
 
-        public Book DeleteBook(int bookId)
+        public BookViewModel DeleteBook(int bookId)
         {
-            return _bookRepository.DeleteBook(bookId);
+            return Mapper.Map<Book, BookViewModel>(_bookRepository.DeleteBook(bookId));
         }
 
-        public IEnumerable<Book> GetAllBooks()
+        public List<BookViewModel> GetAllBooks()
         {
-            return _bookRepository.Books;
+            return _bookRepository.GetBooks().ProjectTo<BookViewModel>(
+                new MapperConfiguration(cfg => cfg.CreateMap<Book, BookViewModel>())).ToList();
         }
 
-        public Book GetBook(int bookId)
+        public BookViewModel GetBook(int bookId)
         {
-            return _bookRepository.GetBook(bookId);
+            return Mapper.Map<Book, BookViewModel>(_bookRepository.GetBook(bookId));
         }
 
-        public Book UpdateBook(Book book)
+        public BookViewModel UpdateBook(BookViewModel bookVm)
         {
-            return _bookRepository.UpdateBook(book);
+            Book book = _bookRepository.UpdateBook(Mapper.Map<BookViewModel, Book>(bookVm));
+            return Mapper.Map<Book, BookViewModel>(book);
         }
     }
 }

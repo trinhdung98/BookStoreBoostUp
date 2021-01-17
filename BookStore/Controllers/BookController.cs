@@ -1,5 +1,7 @@
 ﻿using BookStore.Entities;
+using BookStore.Models;
 using BookStore.Services;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,7 @@ namespace BookStore.Controllers
 {
     public class BookController : Controller
     {
+        private static readonly ILog _log = LogManager.GetLogger(typeof(BookController).Name);
         private IBookService _bookService;
         public BookController(IBookService bookService)
         {
@@ -30,49 +33,52 @@ namespace BookStore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Title,Description,Author,Price")] Book book)
+        public ActionResult Create([Bind(Include = "Title,Description,Author,Price")] BookViewModel bookVm)
         {
+            _log.Info("Start Create Book");
             if (ModelState.IsValid)
             {
-                _bookService.CreateBook(book);
+                _bookService.CreateBook(bookVm);
                 return RedirectToAction("Index");
             }
 
-            return View(book);
+            return View(bookVm);
         }
 
         public ActionResult Edit(int id)
         {
-            Book book = _bookService.GetBook(id);
-            if (book == null)
+            BookViewModel bookVm = _bookService.GetBook(id);
+            if (bookVm == null)
             {
                 return HttpNotFound();
             }
-            return View(book);
+            return View(bookVm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Title,Description,Author,Price")] Book book)
+        public ActionResult Edit([Bind(Include = "ID,Title,Description,Author,Price")] BookViewModel bookVm)
         {
-            _bookService.UpdateBook(book);
+            _log.Info("Start Edit Book");
+            _bookService.UpdateBook(bookVm);
             return RedirectToAction("Index");
         }
 
         public ActionResult Delete(int id)
         {
-            Book book = _bookService.GetBook(id);
-            if (book == null)
+            BookViewModel bookVm = _bookService.GetBook(id);
+            if (bookVm == null)
             {
                 return HttpNotFound();
             }
-            return View(book);
+            return View(bookVm);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            _log.Info("Start Delete Book");
             _bookService.DeleteBook(id);
             return RedirectToAction("Index");
         }

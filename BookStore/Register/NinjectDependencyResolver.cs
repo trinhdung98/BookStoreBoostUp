@@ -1,4 +1,6 @@
-﻿using BookStore.Repositories;
+﻿using AutoMapper;
+using BookStore.App_Start;
+using BookStore.Repositories;
 using BookStore.Services;
 using Ninject;
 using Ninject.Modules;
@@ -32,6 +34,8 @@ namespace BookStore.Register
 
         private void AddBindings()
         {
+            kernel.Bind<IMapper>().ToConstant(BookStoreMapper.Mapper).InSingletonScope();
+            kernel.Bind<IConfigurationProvider>().ToConstant(BookStoreMapper.MapperConfiguration).InSingletonScope();
             kernel.Bind<IBookRepository>().To<BookRepository>();
             kernel.Bind<IBookService>().To<BookService>();
         }

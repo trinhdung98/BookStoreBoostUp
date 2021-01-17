@@ -9,7 +9,7 @@ namespace BookStore.Repositories
 {
     public interface IBookRepository
     {
-        IEnumerable<Book> Books { get; }
+        IQueryable<Book> GetBooks();
         Book GetBook(int bookId);
         void CreateBook(Book book);
         Book DeleteBook(int bookId);
